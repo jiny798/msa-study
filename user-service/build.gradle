@@ -36,6 +36,48 @@ dependencies {
     annotationProcessor 'org.projectlombok:lombok'
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
     testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
+
+    // JPA & H2 Database
+    implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
+    runtimeOnly 'com.h2database:h2'
+
+    // ModelMapper (DTO 변환용)
+    implementation 'org.modelmapper:modelmapper:3.2.0'
+
+    // Spring Security
+    implementation 'org.springframework.boot:spring-boot-starter-security'
+
+    // JWT (jjwt) - 0.9.1은 너무 구형이므로 0.12.x 대역 권장
+    implementation 'io.jsonwebtoken:jjwt-api:0.12.5'
+    runtimeOnly 'io.jsonwebtoken:jjwt-impl:0.12.5'
+    runtimeOnly 'io.jsonwebtoken:jjwt-jackson:0.12.5'
+
+    // Config & Bootstrap
+    implementation 'org.springframework.cloud:spring-cloud-starter-config'
+    implementation 'org.springframework.cloud:spring-cloud-starter-bootstrap'
+
+    // OpenFeign (서비스 간 호출)
+    implementation 'org.springframework.cloud:spring-cloud-starter-openfeign'
+
+    // Spring Cloud Bus (RabbitMQ/AMQP)
+//    implementation 'org.springframework.cloud:spring-cloud-starter-bus-amqp'
+
+    // Actuator & Prometheus (모니터링)
+    implementation 'org.springframework.boot:spring-boot-starter-actuator'
+    implementation 'io.micrometer:micrometer-registry-prometheus'
+
+    // Resilience4j (서킷 브레이커)
+    implementation 'org.springframework.cloud:spring-cloud-starter-circuitbreaker-resilience4j'
+
+    implementation 'io.micrometer:micrometer-tracing-bridge-brave'
+    implementation 'io.zipkin.reporter2:zipkin-reporter-brave'
+
+    runtimeOnly 'com.mysql:mysql-connector-j'
+    implementation 'org.flywaydb:flyway-core'
+    implementation 'org.flywaydb:flyway-mysql'
+
+    implementation 'org.springframework.boot:spring-boot-starter-validation'
+
 }
 
 dependencyManagement {
