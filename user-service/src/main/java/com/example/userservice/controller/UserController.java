@@ -9,6 +9,7 @@ import com.example.userservice.vo.ResponseUser;
 import io.micrometer.core.annotation.Timed;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
 import org.modelmapper.convention.MatchingStrategies;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,6 +22,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+@Slf4j
 @RestController
 @RequestMapping("/")
 public class UserController {
@@ -36,31 +38,17 @@ public class UserController {
         this.userService = userService;
     }
 
-    @GetMapping("/health_check")
-    @Timed(value="users.status", longTask = true)
+    @GetMapping("/health-check")
     public String status() {
         return String.format("It's Working in User Service"
                 + ", port(local.server.port)=" + env.getProperty("local.server.port")
-                + ", port(server.port)=" + env.getProperty("server.port")
-                + ", gateway ip=" + env.getProperty("gateway.ip")
-                + ", message=" + env.getProperty("greeting.message")
-                + ", token secret=" + env.getProperty("token.secret")
-                + ", token expiration time=" + env.getProperty("token.expiration_time"));
+                + ", port(server.port)=" + env.getProperty("server.port"));
     }
 
     @GetMapping("/welcome")
-    @Timed(value="users.welcome", longTask = true)
-    public String welcome(HttpServletRequest request, HttpServletResponse response) {
-//        Cookie[] cookies = request.getCookies();
-//        if (cookies != null) {
-//            Arrays.stream(cookies).forEach(cookie -> {
-//                System.out.print(cookie.getName() + "=" + cookie.getValue());
-//            });
-//        }
-//        Cookie c1 = new Cookie("myuser_token", "abcd1234");
-//        response.addCookie(c1);
-
-//        return env.getProperty("greeting.message");
+    public String welcome(HttpServletRequest request) {
+        log.info("users.welcome ip: {}, {}, {}, {}", request.getRemoteAddr()
+                , request.getRemoteHost(), request.getRequestURI(), request.getRequestURL());
         return greeting.getMessage();
     }
 
@@ -92,7 +80,6 @@ public class UserController {
     @GetMapping("/users/{userId}")
     public ResponseEntity<ResponseUser> getUser(@PathVariable("userId") String userId) {
         UserDto userDto = userService.getUserByUserId(userId);
-
         ResponseUser returnValue = new ModelMapper().map(userDto, ResponseUser.class);
 
         return ResponseEntity.status(HttpStatus.OK).body(returnValue);

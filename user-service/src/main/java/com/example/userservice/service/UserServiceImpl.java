@@ -32,15 +32,17 @@ import java.util.UUID;
 @Service
 @Slf4j
 public class UserServiceImpl implements UserService {
+    Environment env;
+
     UserRepository userRepository;
+
     BCryptPasswordEncoder passwordEncoder;
 
-    Environment env;
-    RestTemplate restTemplate;
-
-    OrderServiceClient orderServiceClient;
-
-    CircuitBreakerFactory circuitBreakerFactory;
+    public UserServiceImpl(Environment env, UserRepository userRepository, BCryptPasswordEncoder passwordEncoder) {
+        this.env = env;
+        this.userRepository = userRepository;
+        this.passwordEncoder = passwordEncoder;
+    }
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
@@ -52,21 +54,6 @@ public class UserServiceImpl implements UserService {
         return new User(userEntity.getEmail(), userEntity.getEncryptedPwd(),
                 true, true, true, true,
                 new ArrayList<>());
-    }
-
-    @Autowired
-    public UserServiceImpl(UserRepository userRepository,
-                           BCryptPasswordEncoder passwordEncoder,
-                           Environment env,
-                           RestTemplate restTemplate,
-                           OrderServiceClient orderServiceClient,
-                           CircuitBreakerFactory circuitBreakerFactory) {
-        this.userRepository = userRepository;
-        this.passwordEncoder = passwordEncoder;
-        this.env = env;
-        this.restTemplate = restTemplate;
-        this.orderServiceClient = orderServiceClient;
-        this.circuitBreakerFactory = circuitBreakerFactory;
     }
 
     @Override
@@ -94,33 +81,8 @@ public class UserServiceImpl implements UserService {
 
         UserDto userDto = new ModelMapper().map(userEntity, UserDto.class);
 
-//        List<ResponseOrder> orders = new ArrayList<>();
-        /* Using as rest template */
-//        String orderUrl = String.format(env.getProperty("order_service.url"), userId);
-//        ResponseEntity<List<ResponseOrder>> orderListResponse =
-//                restTemplate.exchange(orderUrl, HttpMethod.GET, null,
-//                                            new ParameterizedTypeReference<List<ResponseOrder>>() {
-//                });
-//        List<ResponseOrder> ordersList = orderListResponse.getBody();
-
-        /* Using a feign client */
-        /* Feign exception handling */
-//        List<ResponseOrder> ordersList = null;
-//        try {
-//            ordersList = orderServiceClient.getOrders(userId);
-//        } catch (FeignException ex) {
-//            log.error(ex.getMessage());
-//        }
-
-        /* ErrorDecoder */
-        List<ResponseOrder> ordersList = orderServiceClient.getOrders(userId);
-//        log.info("Before call orders microservice");
-//        CircuitBreaker circuitBreaker = circuitBreakerFactory.create("circuitbreaker");
-//        List<ResponseOrder> ordersList = circuitBreaker.run(() -> orderServiceClient.getOrders(userId),
-//                throwable -> new ArrayList<>());
-//        log.info("After called orders microservice");
-
-        userDto.setOrders(ordersList);
+        List<ResponseOrder> orderList = new ArrayList<>();
+        userDto.setOrders(orderList);
 
         return userDto;
     }

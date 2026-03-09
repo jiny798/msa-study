@@ -6,6 +6,7 @@ import com.example.userservice.vo.RequestLogin;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
+import io.jsonwebtoken.security.Keys;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -19,21 +20,23 @@ import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
+import javax.crypto.SecretKey;
 import java.io.IOException;
+import java.nio.charset.StandardCharsets;
+import java.time.Instant;
 import java.util.ArrayList;
 import java.util.Date;
 
 @Slf4j
 public class AuthenticationFilter extends UsernamePasswordAuthenticationFilter {
     private UserService userService;
-    private Environment env;
+    private Environment environment;
 
     public AuthenticationFilter(AuthenticationManager authenticationManager,
-                                UserService userService,
-                                Environment env) {
-        super.setAuthenticationManager(authenticationManager);
+                                UserService userService, Environment environment) {
+        super(authenticationManager);
         this.userService = userService;
-        this.env = env;
+        this.environment = environment;
     }
 
     @Override
@@ -55,20 +58,26 @@ public class AuthenticationFilter extends UsernamePasswordAuthenticationFilter {
     }
 
     @Override
-    protected void successfulAuthentication(HttpServletRequest request,
-                                            HttpServletResponse response,
-                                            FilterChain chain,
-                                            Authentication authResult) throws IOException, ServletException {
-        String userName = ((User)authResult.getPrincipal()).getUsername();
+    protected void successfulAuthentication(HttpServletRequest req, HttpServletResponse res,
+                                            FilterChain chain, Authentication authResult)
+            throws IOException, ServletException {
+        String userName = ((User) authResult.getPrincipal()).getUsername();
         UserDto userDetails = userService.getUserDetailsByEmail(userName);
+
+        byte[] secretKeyBytes = environment.getProperty("token.secret").getBytes(StandardCharsets.UTF_8);
+
+        SecretKey secretKey = Keys.hmacShaKeyFor(secretKeyBytes);
+
+        Instant now = Instant.now();
+
         String token = Jwts.builder()
-                .setSubject(userDetails.getUserId())
-                .setExpiration(new Date(System.currentTimeMillis() +
-                        Long.parseLong(env.getProperty("token.expiration_time"))))
-                .signWith(SignatureAlgorithm.HS512, env.getProperty("token.secret"))
+                .subject(userDetails.getUserId())
+                .expiration(Date.from(now.plusMillis(Long.parseLong(environment.getProperty("token.expiration-time")))))
+                .issuedAt(Date.from(now))
+                .signWith(secretKey)
                 .compact();
 
-        response.addHeader("token", token);
-        response.addHeader("userId", userDetails.getUserId());
+        res.addHeader("token", token);
+        res.addHeader("userId", userDetails.getUserId());
     }
 }
