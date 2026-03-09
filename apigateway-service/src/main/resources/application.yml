@@ -10,9 +10,9 @@ spring:
         webmvc:
           routes:
             - id: first-service
-              uri:
+              uri: # 요청을 처리할 서비스 주소
                   http://localhost:8081
-              predicates:
+              predicates: # predicates 로 오는것은 uri 로 넘긴다
                 - Path=/first-service/**
             - id: second-service
               uri:
