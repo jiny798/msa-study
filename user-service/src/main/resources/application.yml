@@ -1,6 +1,13 @@
 server:
   port: 0
 
+eureka:
+  client:
+    register-with-eureka: true
+    fetch-registry: true
+    service-url:
+      defaultZone: http://localhost:8761/eureka
+
 spring:
   application:
     name: user-service
@@ -23,18 +30,9 @@ spring:
     level:
       org.hibernate.SQL: DEBUG
 
-eureka:
-  instance:
-    instance-id: ${spring.application.name}:${random.value}
-  client:
-    register-with-eureka: true
-    fetch-registry: true
-    service-url:
-      defaultZone: http://localhost:8761/eureka/
-
 greeting:
   message: Welcome to the Simple E-commerce.
 
 token:
   expiration-time: 86400000 #10 days
-  secret: my-secret-key-777
+  secret: my-secret-long-key-77777777777777-9999999999999-8888888888888
