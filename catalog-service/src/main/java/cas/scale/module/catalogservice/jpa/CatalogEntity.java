@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 import lombok.Data;
 import org.hibernate.annotations.ColumnDefault;
 
+import java.time.LocalDateTime;
 import java.util.Date;
 
 @Data
@@ -26,7 +27,7 @@ public class CatalogEntity {
     @Column(nullable = false)
     private Integer unitPrice;
 
-    @Column(nullable = false, updatable = false, insertable = false)
-    @ColumnDefault(value = "CURRENT_TIMESTAMP")
-    private Date createdAt;
+    @Column(nullable = false, updatable = false, insertable = false,
+            columnDefinition = "datetime default CURRENT_TIMESTAMP")
+    private LocalDateTime createdAt;
 }

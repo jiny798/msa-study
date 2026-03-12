@@ -16,6 +16,7 @@ spring:
       server:
         webflux:
           routes:
+            # user-service: 회원가입
             - id: user-service-register
               uri: lb://USER-SERVICE
               predicates:
@@ -24,6 +25,8 @@ spring:
               filters:
                 - RemoveRequestHeader=Cookie
                 - RewritePath=/user-service/(?<segment>.*), /$\{segment}
+
+            # user-service: 로그인
             - id: user-service-login
               uri: lb://USER-SERVICE
               predicates:
@@ -32,6 +35,8 @@ spring:
               filters:
                 - RemoveRequestHeader=Cookie
                 - RewritePath=/user-service/(?<segment>.*), /$\{segment}
+
+            # user-service: 그 외 요청 커스텀 필터 등록
             - id: user-service
               uri: lb://USER-SERVICE
               predicates:
@@ -40,5 +45,9 @@ spring:
               filters:
                 - RemoveRequestHeader=Cookie
                 - RewritePath=/user-service/(?<segment>.*), /$\{segment}
-                # 커스텀 필터 등록
                 - AuthorizationHeaderFilter
+            # catalog-service: 그 외 요청 커스텀 필터 등록
+            - id: catalog-service
+              uri: lb://CATALOG-SERVICE
+              predicates:
+                - Path=/catalog-service/**
