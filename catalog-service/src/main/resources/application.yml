@@ -27,3 +27,13 @@ spring:
   logging:
     level:
       org.hibernate.SQL: DEBUG
+
+eureka:
+  client:
+    register-with-eureka: true
+    fetch-registry: true
+    service-url:
+      defaultZone: http://localhost:8761/eureka
+  instance:
+    instance-id: ${spring.cloud.client.ip-address}:${random.value}}
+    prefer-ip-address: true

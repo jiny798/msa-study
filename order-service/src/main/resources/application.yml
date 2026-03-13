@@ -1,5 +1,5 @@
 server:
-  port: 8083
+  port: 0
 
 spring:
   application:
@@ -11,8 +11,9 @@ spring:
     driver-class-name: com.mysql.cj.jdbc.Driver
   jpa:
     hibernate:
-      ddl-auto: create
+      ddl-auto: update
     show-sql: true
+    defer-datasource-initialization: true
     properties:
       hibernate:
         format_sql: true
@@ -22,3 +23,13 @@ spring:
   logging:
     level:
       org.hibernate.SQL: DEBUG
+
+eureka:
+  client:
+    register-with-eureka: true
+    fetch-registry: true
+    service-url:
+      defaultZone: http://localhost:8761/eureka
+  instance:
+    instance-id: ${spring.cloud.client.ip-address}:${random.value}}
+    prefer-ip-address: true

@@ -46,8 +46,19 @@ spring:
                 - RemoveRequestHeader=Cookie
                 - RewritePath=/user-service/(?<segment>.*), /$\{segment}
                 - AuthorizationHeaderFilter
-            # catalog-service: 그 외 요청 커스텀 필터 등록
+
+            # catalog-service:
             - id: catalog-service
               uri: lb://CATALOG-SERVICE
               predicates:
                 - Path=/catalog-service/**
+
+            # order-service:
+            - id: catalog-service
+              uri: lb://ORDER-SERVICE
+              predicates:
+                - Path=/order-service/**
+
+token:
+  expiration-time: 86400000 #10 days
+  secret: my-secret-long-key-77777777777777-9999999999999-8888888888888
