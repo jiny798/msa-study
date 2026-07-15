@@ -1,0 +1,6 @@
+#config server 위치와 config server 의 yml 파일 지정
+spring:
+  cloud:
+    config:
+      uri: http://localhost:8888
+      name: ecommerce

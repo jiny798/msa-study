@@ -38,3 +38,13 @@ greeting:
 token:
   expiration-time: 86400000 #10 days
   secret: my-secret-long-key-77777777777777-9999999999999-8888888888888
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include:
+          - refresh
+          - health
+          - beans
+          - info
