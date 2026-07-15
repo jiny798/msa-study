@@ -54,7 +54,7 @@ dependencies {
 
     // Config & Bootstrap
     implementation 'org.springframework.cloud:spring-cloud-starter-config'
-    implementation 'org.springframework.cloud:spring-cloud-starter-bootstrap'
+    implementation 'org.springframework.cloud:spring-cloud-starter-bootstrap' //
 
     // OpenFeign (서비스 간 호출)
     implementation 'org.springframework.cloud:spring-cloud-starter-openfeign'
