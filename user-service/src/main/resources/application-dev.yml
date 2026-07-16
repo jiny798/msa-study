@@ -13,8 +13,6 @@ eureka:
 spring:
   application:
     name: user-service
-#  config:
-#    import: "optional:configserver:http://localhost:8888" #이거대신 부트스트랩 yml 파일에서 가져옴
   datasource:
     url: jdbc:mysql://localhost:3308/msa_db?useSSL=false&allowPublicKeyRetrieval=true
     username: root
@@ -46,7 +44,7 @@ management:
     web:
       exposure:
         include:
-          - refresh # 변경된 yml 파일을 config server 로부터 가져온다
+          - refresh
           - health
           - beans
           - info
