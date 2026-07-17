@@ -37,9 +37,9 @@ spring:
 greeting:
   message: Welcome to the Simple E-commerce.
 
-token:
-  expiration-time: 86400000 #10 days
-  secret: my-secret-long-key-77777777777777-9999999999999-8888888888888
+#token:
+#  expiration-time: 86400000 #10 days
+#  secret: my-secret-long-key-77777777777777-9999999999999-8888888888888
 
 management:
   endpoints:

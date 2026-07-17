@@ -23,7 +23,7 @@ public class UserServiceApplication {
     }
 
     @Bean
-    @LoadBalanced
+    @LoadBalanced // 이게 있으면 yml 에 order_service 즉 유레카서버에 등록된 application name 만보고 외부 서비스에 요청을 보낼수있음
     public RestTemplate getRestTemplate() {
         return new RestTemplate();
     }

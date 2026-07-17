@@ -4,9 +4,13 @@ server:
 spring:
   application:
     name: config-service
+#  profiles:
+#    active: native  # git commit 을 보지않고, 그냥 파일 저장만 해도 yml 내용 반영할 수 있음
   cloud:
     config:
       server:
+#        native:
+#          search-locations: file://E:\\config
         git:
           uri: file://E:\\config
           default-label: master # ??? ???
